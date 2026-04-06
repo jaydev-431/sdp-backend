@@ -9,14 +9,31 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 @Entity
-@Table(name="reports_table")
-public class Report {
+@Table(name="Issue_table")
+public class Issue {
 		
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id ;
 	@Column(nullable=false)
 	private String pollingStation;
+	
+
+	@Column(nullable=false)
+	private String issueType;
+	
+
+	@Column(nullable=false)
+	private String report;
+	
+	@ManyToOne
+	@JoinColumn(name="citizen_id")
+	private Citizen citizen;
+	
+	
+	
+	
+	
 	public Citizen getCitizen() {
 		return citizen;
 	}
@@ -42,11 +59,11 @@ public class Report {
 	}
 
 	public String getIssueType() {
-		return IssueType;
+		return issueType;
 	}
 
 	public void setIssueType(String issueType) {
-		IssueType = issueType;
+		issueType = issueType;
 	}
 
 	public String getReport() {
@@ -56,13 +73,11 @@ public class Report {
 	public void setReport(String report) {
 		this.report = report;
 	}
-
-	@Column(nullable=false)
-	private String IssueType;
-	@Column(nullable=false)
-	private String report;
 	
-	@ManyToOne
-	@JoinColumn(name="citizen_id")
-	private Citizen citizen;
+	@Override
+	public String toString() {
+		return "Issue [id=" + id + ", pollingStation=" + pollingStation + ", IssueType=" + issueType + ", report="
+				+ report + ", citizen=" + citizen + "]";
+	}
+
 }

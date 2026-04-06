@@ -3,6 +3,7 @@ package com.klef.sdp.sdpbackend.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.klef.sdp.sdpbackend.entity.Admin;
 import com.klef.sdp.sdpbackend.entity.Analyst;
@@ -10,7 +11,7 @@ import com.klef.sdp.sdpbackend.entity.Observer;
 import com.klef.sdp.sdpbackend.repository.AdminRepository;
 import com.klef.sdp.sdpbackend.repository.AnalystRepository;
 import com.klef.sdp.sdpbackend.repository.ObserverRepository;
-
+@Service
 public class AdminServiceImpl implements AdminService{
 	
 	@Autowired
@@ -34,20 +35,22 @@ public class AdminServiceImpl implements AdminService{
 
 	@Override
 	public List<Observer> viewAllObservers() {
-		// TODO Auto-generated method stub
-		return null;
+		return observerRepo.findAll();
 	}
 
 	@Override
 	public List<Analyst> viewAllAnalysts() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return analystRepo.findAll();
 	}
 
 	@Override
 	public String deleteObserver(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		if(observerRepo.existsById(id)) {
+			observerRepo.deleteById(id);
+			return "Observer Deleted Successfully";
+		}
+		return "Not found";
 	}
 
 	@Override

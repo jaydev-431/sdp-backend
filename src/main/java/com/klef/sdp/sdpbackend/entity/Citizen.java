@@ -12,17 +12,55 @@ import jakarta.persistence.*;
 public class Citizen {
 	
 	@OneToMany(mappedBy="citizen")
-	private List<Report> reports;
+	private List<Issue> issues;
 	
 	@OneToMany(mappedBy="citizen")
 	private List<Discussion> discussions;
 
-    public List<Report> getReports() {
-		return reports;
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column( nullable = false)
+    private Long id;
+
+    @Column( nullable = false)
+    private String name;
+
+    @Column( nullable = false, unique = true)
+    private String email;
+
+    @Column( nullable = false)
+    private String password;
+
+    @Column( nullable = false)
+    private int age;
+
+    @Column( nullable = false)
+    private String gender;
+
+    @Column( nullable = false, unique = true)
+    private String contact;
+
+    @Column( nullable = false)
+    private String location;
+
+    @CreationTimestamp
+    @Column(  updatable = false)
+    private LocalDateTime registeredAt;
+	
+	
+    @Override
+	public String toString() {
+		return "Citizen [reports=" + issues + ", discussions=" + discussions + ", id=" + id + ", name=" + name
+				+ ", email=" + email + ", password=" + password + ", age=" + age + ", gender=" + gender + ", contact="
+				+ contact + ", location=" + location + ", registeredAt=" + registeredAt + "]";
 	}
 
-	public void setReports(List<Report> reports) {
-		this.reports = reports;
+	public List<Issue> getReports() {
+		return issues;
+	}
+
+	public void setReports(List<Issue> reports) {
+		this.issues = reports;
 	}
 
 	public List<Discussion> getDiscussions() {
@@ -105,33 +143,5 @@ public class Citizen {
 		this.registeredAt = registeredAt;
 	}
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( nullable = false)
-    private Long id;
-
-    @Column( nullable = false)
-    private String name;
-
-    @Column( nullable = false, unique = true)
-    private String email;
-
-    @Column( nullable = false)
-    private String password;
-
-    @Column( nullable = false)
-    private int age;
-
-    @Column( nullable = false)
-    private String gender;
-
-    @Column( nullable = false, unique = true)
-    private String contact;
-
-    @Column( nullable = false)
-    private String location;
-
-    @CreationTimestamp
-    @Column(  updatable = false)
-    private LocalDateTime registeredAt;
+	
 }
