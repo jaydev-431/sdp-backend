@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.klef.sdp.sdpbackend.entity.Admin;
 import com.klef.sdp.sdpbackend.entity.Analyst;
+import com.klef.sdp.sdpbackend.entity.Issue;
 import com.klef.sdp.sdpbackend.entity.Observer;
 import com.klef.sdp.sdpbackend.repository.AdminRepository;
 import com.klef.sdp.sdpbackend.repository.AnalystRepository;
+import com.klef.sdp.sdpbackend.repository.IssueRepository;
 import com.klef.sdp.sdpbackend.repository.ObserverRepository;
 @Service
 public class AdminServiceImpl implements AdminService{
-	
 	@Autowired
 	public AdminRepository adminrepo;
 	
@@ -22,6 +23,9 @@ public class AdminServiceImpl implements AdminService{
 	
 	@Autowired
 	public AnalystRepository analystRepo;
+	
+	@Autowired
+	public IssueRepository issuerepo;
 
 	@Override
 	public Admin verifyAdminLogin(String username, String password) {
@@ -52,23 +56,27 @@ public class AdminServiceImpl implements AdminService{
 		}
 		return "Not found";
 	}
-
 	@Override
 	public String deleteAnalyst(Long id) {
+		if(analystRepo.existsById(id)) {
 		analystRepo.deleteById(id);
 		return "Analyst deleted successfully";
+	}else {
+			return "not found";
 	}
-
+	}
 	@Override
 	public String addObserver(Observer ob) {
 		observerRepo.save(ob);
-		return "Analyst added successfully";
+		return "observer added successfully";
 	}
-
 	@Override
 	public String addAnalyst(Analyst an) {
 		analystRepo.save(an);
 		return "Analyst added successfully";
 	}
-
+	@Override
+	public List<Issue> viewAllIssues() {
+		return issuerepo.findAll();	
+	}
 }

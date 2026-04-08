@@ -1,45 +1,51 @@
 package com.klef.sdp.sdpbackend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.*;
+
 @Entity
 @Table(name="Issue_table")
 public class Issue {
 		
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id ;
+	private Long id;
+
 	@Column(nullable=false)
 	private String pollingStation;
-	
 
 	@Column(nullable=false)
 	private String issueType;
-	
 
 	@Column(nullable=false)
-	private String report;
-	
+	private String description;
+
+	@Column(nullable=false)
+	private String status;
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name="citizen_id")
 	private Citizen citizen;
 	
+	@CreationTimestamp
+	@Column(updatable=false)
+	private LocalDateTime addedAt;
+
 	
 	
 	
-	
-	public Citizen getCitizen() {
-		return citizen;
+	public LocalDateTime getAddedAt() {
+		return addedAt;
 	}
 
-	public void setCitizen(Citizen citizen) {
-		this.citizen = citizen;
+	public void setAddedAt(LocalDateTime addedAt) {
+		this.addedAt = addedAt;
 	}
 
 	public Long getId() {
@@ -63,21 +69,38 @@ public class Issue {
 	}
 
 	public void setIssueType(String issueType) {
-		issueType = issueType;
+		this.issueType = issueType;
 	}
 
-	public String getReport() {
-		return report;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setReport(String report) {
-		this.report = report;
+	public void setDescription(String description) {
+		this.description = description;
 	}
-	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Citizen getCitizen() {
+		return citizen;
+	}
+
+	public void setCitizen(Citizen citizen) {
+		this.citizen = citizen;
+	}
+
 	@Override
 	public String toString() {
-		return "Issue [id=" + id + ", pollingStation=" + pollingStation + ", IssueType=" + issueType + ", report="
-				+ report + ", citizen=" + citizen + "]";
+		return "Issue [id=" + id + ", pollingStation=" + pollingStation + ", issueType=" + issueType + ", description="
+				+ description + ", status=" + status + ", citizen=" + citizen + ", addedAt=" + addedAt + "]";
 	}
 
+	
 }

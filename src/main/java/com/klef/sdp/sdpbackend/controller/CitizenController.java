@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.UnknownHttpStatusCodeException;
 
+import com.klef.sdp.sdpbackend.dto.DiscussionDTO;
 import com.klef.sdp.sdpbackend.entity.Citizen;
 import com.klef.sdp.sdpbackend.entity.Discussion;
 import com.klef.sdp.sdpbackend.entity.Issue;
@@ -64,7 +66,7 @@ public class CitizenController {
 			String value = citizenservice.addIssue(i);
 			return ResponseEntity.ok(value);
 		}catch(Exception e) {
-			return ResponseEntity.status(500).body("failed to add");
+			return ResponseEntity.status(500).body(e.getMessage());
 		}
 	}
 	
@@ -76,7 +78,7 @@ public class CitizenController {
 	
 	@GetMapping("/viewalldiscussions")
 	public ResponseEntity<?> viewAllDiscussions(){
-		List<Discussion> d = citizenservice.viewDiscussions();
+		List<DiscussionDTO> d = citizenservice.viewDiscussions();
 		if(d.size()>0) {
 			return ResponseEntity.ok(d);
 		}else {
@@ -86,9 +88,9 @@ public class CitizenController {
 	}
 	
 	
-	@GetMapping("/viewmyissues") 
-	public ResponseEntity<?> viewMyIssues(){
-		List<Issue> i = citizenservice.viewMyIssues();
+	@GetMapping("/viewmyissues/{citizenid}") 
+	public ResponseEntity<?> viewMyIssues(@PathVariable Long citizenid){
+		List<Issue> i = citizenservice.viewMyIssues(citizenid);
 		if(i.size()>0) {
 			return ResponseEntity.ok(i);
 		}else {
@@ -96,15 +98,14 @@ public class CitizenController {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@GetMapping("viewmycomments/{citizenid}")
+	public ResponseEntity<?> viewMyComments(@PathVariable Long citizenid){
+		List<Discussion> mycomments = citizenservice.viewMyComments(citizenid);
+		if(mycomments.size()>0) {
+			return ResponseEntity.ok(mycomments);
+		}else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Empty");
+		}
+	}
 	
 }

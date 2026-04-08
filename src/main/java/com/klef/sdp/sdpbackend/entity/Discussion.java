@@ -1,5 +1,11 @@
 package com.klef.sdp.sdpbackend.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,13 +24,24 @@ public class Discussion {
 	@Column(nullable=false)
 	private String comment;
 	
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name="citizen_id")
 	private Citizen citizen;
 	
+	@CreationTimestamp
+	@Column(updatable=false)
+	private LocalDateTime addedAt;
 	
 	
 	
+	public LocalDateTime getAddedAt() {
+		return addedAt;
+	}
+
+	public void setAddedAt(LocalDateTime addedAt) {
+		this.addedAt = addedAt;
+	}
 
 	public Long getId() {
 		return id;
@@ -52,9 +69,9 @@ public class Discussion {
 
 	@Override
 	public String toString() {
-		return "Discussion [id=" + id + ", comment=" + comment + ", citizen=" + citizen + "]";
+		return "Discussion [id=" + id + ", comment=" + comment + ", citizen=" + citizen + ", addedAt=" + addedAt + "]";
 	}
-	
+
 	
 	
 	

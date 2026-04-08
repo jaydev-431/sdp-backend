@@ -1,22 +1,19 @@
 package com.klef.sdp.sdpbackend.controller;
-
 import java.util.List;
-
-import org.apache.logging.log4j.status.StatusConsoleListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.klef.sdp.sdpbackend.entity.Admin;
 import com.klef.sdp.sdpbackend.entity.Analyst;
+import com.klef.sdp.sdpbackend.entity.Issue;
 import com.klef.sdp.sdpbackend.entity.Observer;
 import com.klef.sdp.sdpbackend.service.AdminService;
 import com.klef.sdp.sdpbackend.service.AnalystService;
@@ -36,7 +33,6 @@ public class AdminController {
 	@Autowired
 	public AnalystService as;
 
-	
 	@RequestMapping(value="/",method=RequestMethod.GET)
 	public String Home() {
 		return "SDP Backend project ";
@@ -67,8 +63,6 @@ public class AdminController {
 		
 	}
 	
-	
-	
 	@GetMapping("/viewallanalysts")
 	public ResponseEntity<?> viewAllanAnalysts(@RequestBody Analyst an){
 		try {
@@ -93,7 +87,47 @@ public class AdminController {
 		}
 	}
 	
+	@GetMapping("viewallissues")
+	public ResponseEntity<?> viewAllIssues(){
+		try {
+			List<Issue> issues = adminservice.viewAllIssues();
+			if(issues.size()>0) {
+			return ResponseEntity.ok(issues);
+			}else {
+				return ResponseEntity.status(204).body("No records");
+			}
+			
+		}catch(Exception e) {
+			return ResponseEntity.status(500).body("Internal server error ");
+		}
+	}
 	
+	@DeleteMapping("/deleteobserver/{id}")
+	public ResponseEntity<?> deleteObserver(@PathVariable Long id) {
+		try {
+			String response = adminservice.deleteObserver(id);
+		return ResponseEntity.ok(response) ;
+		}catch(Exception e) {
+			return ResponseEntity.status(500).body("internal server error"); 
+		}
+	}
+	@DeleteMapping("/deleteanalyst/{id}")
+	public ResponseEntity<?> deleteAnalyst(@PathVariable Long id){
+		try {
+			String response = adminservice.deleteAnalyst(id);
+			return ResponseEntity.ok(response);
+		}catch(Exception e) {
+			return ResponseEntity.status(500).body(e.getMessage());
+		}
+	}
 	
-	
+	@PostMapping("/addobserver")
+	public ResponseEntity<?> addObserver(@RequestBody Observer ob ){
+		try {
+			String response = adminservice.addObserver(ob);
+			return ResponseEntity.ok(response);
+		}catch(Exception e) {
+			return ResponseEntity.status(500).body(e.getMessage());
+		}
+	}
 }

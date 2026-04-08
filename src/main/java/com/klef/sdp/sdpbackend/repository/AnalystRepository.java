@@ -9,4 +9,6 @@ import java.util.List;
 public interface AnalystRepository extends JpaRepository<Analyst, Long>{
 	
 Analyst  findByEmail(String email);
+
+boolean existsById(Long id);
 }

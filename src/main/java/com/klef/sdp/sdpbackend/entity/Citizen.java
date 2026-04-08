@@ -5,15 +5,19 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name="citizen_table")
 public class Citizen {
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy="citizen")
 	private List<Issue> issues;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy="citizen")
 	private List<Discussion> discussions;
 
