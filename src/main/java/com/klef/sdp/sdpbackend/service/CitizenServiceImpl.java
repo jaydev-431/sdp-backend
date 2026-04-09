@@ -88,6 +88,4 @@ public class CitizenServiceImpl implements CitizenService {
 	}
 
 	
-	
-
 }

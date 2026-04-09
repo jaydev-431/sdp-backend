@@ -43,7 +43,7 @@ public class AdminController {
 		try {
 		Admin ad = adminservice.verifyAdminLogin(a.getUsername(), a.getPassword());
 		if(ad!=null) {
-			return ResponseEntity.status(201).body(a);			
+			return ResponseEntity.status(200).body(a);			
 		}else {
 			return ResponseEntity.status(401).body("Invalid login");
 		}

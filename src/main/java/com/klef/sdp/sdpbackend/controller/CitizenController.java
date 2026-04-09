@@ -2,12 +2,14 @@ package com.klef.sdp.sdpbackend.controller;
 
 import java.util.List;
 
+
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,15 +25,23 @@ import com.klef.sdp.sdpbackend.dto.DiscussionDTO;
 import com.klef.sdp.sdpbackend.entity.Citizen;
 import com.klef.sdp.sdpbackend.entity.Discussion;
 import com.klef.sdp.sdpbackend.entity.Issue;
+import com.klef.sdp.sdpbackend.repository.DiscussionsRepository;
 import com.klef.sdp.sdpbackend.service.CitizenService;
 
 @RestController
 @RequestMapping("citizen_api")
 @CrossOrigin("*")
 public class CitizenController {
+
+    private final DiscussionsRepository discussionsRepository;
 	
 	@Autowired
 	public CitizenService citizenservice;
+
+
+    CitizenController(DiscussionsRepository discussionsRepository) {
+        this.discussionsRepository = discussionsRepository;
+    }
 	
 	
 	
@@ -107,5 +117,13 @@ public class CitizenController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Empty");
 		}
 	}
+	
+	@DeleteMapping("/deletemycomment/{id}")
+	public ResponseEntity<?> deleteMyComment(@PathVariable Long id){
+		String response = citizenservice.deleteMyComment(id);
+			return ResponseEntity.ok(response);
+		
+	}
+	
 	
 }

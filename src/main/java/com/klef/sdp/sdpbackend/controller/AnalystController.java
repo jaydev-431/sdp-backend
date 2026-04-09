@@ -12,7 +12,7 @@ import com.klef.sdp.sdpbackend.entity.Analyst;
 import com.klef.sdp.sdpbackend.service.AnalystService;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/analystapi")
 @CrossOrigin("*")
 public class AnalystController {
 
