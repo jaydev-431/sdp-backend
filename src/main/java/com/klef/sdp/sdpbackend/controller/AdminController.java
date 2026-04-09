@@ -64,7 +64,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("/viewallanalysts")
-	public ResponseEntity<?> viewAllanAnalysts(@RequestBody Analyst an){
+	public ResponseEntity<?> viewAllanAnalysts(){
 		try {
 			List<Analyst> alist= adminservice.viewAllAnalysts();
 			if(alist.size()>0) {

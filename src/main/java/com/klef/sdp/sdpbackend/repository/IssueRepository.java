@@ -8,7 +8,8 @@ import com.klef.sdp.sdpbackend.entity.Issue;
 
 public interface IssueRepository extends JpaRepository<Issue, Long>{
 
-	
-	List<Issue> findByCitizenId(Long id); 
-
+  
+  List<Issue> findByCitizenId(Long id); 
+  
+  List<Issue> findByPollingStation(String pollingstation);
 }

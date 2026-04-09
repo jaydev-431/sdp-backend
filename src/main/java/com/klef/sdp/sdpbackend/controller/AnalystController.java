@@ -1,49 +1,71 @@
 package com.klef.sdp.sdpbackend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import com.klef.sdp.sdpbackend.entity.Analyst;
+import com.klef.sdp.sdpbackend.entity.Issue;
 import com.klef.sdp.sdpbackend.service.AnalystService;
 
 @RestController
 @RequestMapping("/analystapi")
-@CrossOrigin("*")
+@CrossOrigin("*")   
 public class AnalystController {
 
-	@Autowired
-	private AnalystService analystservice;
-	
-	@GetMapping("/")
-	 public String analysthome()
-	  {
-		   return "Analyst Controller Demo";
-	  }
-	
-	@PostMapping("/login")
-	 public ResponseEntity<?> verifyAnalystlogin(@RequestBody Analyst analyst)
-	  {
-		   try
-			{
-				Analyst a = analystservice.verifyAnalystLogin(analyst.getEmail(), analyst.getPassword());
-			
-			    if(a!=null)
-			    {
-			    	return ResponseEntity.status(200).body(a);
-			    }
-			    else
-			    {
-			    	return ResponseEntity.status(401).body("Login Invalid");
-			    }
-			}
-			catch (Exception e) 
-			{
-				return ResponseEntity.status(500).body("Internal Server Error");
-			}
-	  }
+    private final AnalystService analystService;
+
+    public AnalystController(AnalystService analystService) {
+        this.analystService = analystService;
+    }
+
+    // LOGIN
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> data) {
+
+        Analyst analyst = analystService.verifyAnalystLogin(
+                data.get("email"),
+                data.get("password")
+        );
+
+        if (analyst != null) {
+            return ResponseEntity.ok(analyst);
+        } else {
+            return ResponseEntity.status(401).body("Invalid Credentials");
+        }
+    }
+
+    // VIEW ALL ISSUES
+    @GetMapping("/viewallissues")
+    public ResponseEntity<List<Issue>> getAllIssues() {
+        return ResponseEntity.ok(analystService.getAllIssues());
+    }
+
+    // GET ISSUES BY REGION
+    @GetMapping("/pollingstation/{pollingstation}")
+    public ResponseEntity<List<Issue>> getByPollingStation(@PathVariable String pollingstation) {
+        return ResponseEntity.ok(analystService.getIssuesByPollingstation(pollingstation));
+    }
+
+    // UPDATE ISSUE STATUS
+    @PutMapping("/updateIssueStatus/{id}/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long id,
+                                          @PathVariable String status) {
+
+        Issue issue = analystService.updateIssueStatus(id, status);
+
+        if (issue != null) {
+            return ResponseEntity.ok(issue);
+        } else {
+            return ResponseEntity.status(404).body("Issue not found");
+        }
+    }
+
+    // REPORT
+    @GetMapping("/report")
+    public ResponseEntity<String> getReport() {
+        return ResponseEntity.ok(analystService.generateReport());
+    }
 }
