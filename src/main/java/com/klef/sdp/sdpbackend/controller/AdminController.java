@@ -88,18 +88,15 @@ public class AdminController {
 	}
 	
 	@GetMapping("viewallissues")
-	public ResponseEntity<?> viewAllIssues(){
-		try {
-			List<Issue> issues = adminservice.viewAllIssues();
-			if(issues.size()>0) {
-			return ResponseEntity.ok(issues);
-			}else {
-				return ResponseEntity.status(204).body("No records");
-			}
-			
-		}catch(Exception e) {
-			return ResponseEntity.status(500).body("Internal server error ");
-		}
+	public ResponseEntity<?> viewAllIssues() {
+	    try {
+	        List<Issue> issues = adminservice.viewAllIssues();
+
+	        return ResponseEntity.ok(issues);   
+
+	    } catch (Exception e) {
+	        return ResponseEntity.status(500).body("Internal server error");
+	    }
 	}
 	
 	@DeleteMapping("/deleteobserver/{id}")

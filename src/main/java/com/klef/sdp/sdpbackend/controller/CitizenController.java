@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.UnknownHttpStatusCodeException;
 
+import com.klef.sdp.sdpbackend.dto.ApiResponse;
 import com.klef.sdp.sdpbackend.dto.DiscussionDTO;
 import com.klef.sdp.sdpbackend.entity.Citizen;
 import com.klef.sdp.sdpbackend.entity.Discussion;
@@ -38,13 +39,6 @@ public class CitizenController {
 	@Autowired
 	public CitizenService citizenservice;
 
-
-    CitizenController(DiscussionsRepository discussionsRepository) {
-        this.discussionsRepository = discussionsRepository;
-    }
-	
-	
-	
 	@RequestMapping(value="/login",method = RequestMethod.POST)
 	public ResponseEntity<?> verifyLogin(@RequestBody Citizen citizen ) {
 		try {
@@ -59,15 +53,35 @@ public class CitizenController {
 			return ResponseEntity.status(500).body(e);
 		}
 	}
-	
 	@PostMapping("/citizenregister")
-	public ResponseEntity<?> signUp(@RequestBody Citizen c){
-		try {
-			citizenservice.CitizenRegister(c);
-			return ResponseEntity.ok("account created successfully");
-		}catch(Exception e) {
-			return ResponseEntity.status(500).body("Server error");
-		}
+	public ResponseEntity<?> signUp(@RequestBody Citizen c) {
+	    try {
+
+	        
+	        if (c.getEmail() == null || c.getEmail().isEmpty()) {
+	            return ResponseEntity.badRequest().body(new ApiResponse(false, "Email is required"));
+	        }
+
+	        if (c.getContact() == null || !c.getContact().matches("\\d{10}")) {
+	            return ResponseEntity.badRequest().body(new ApiResponse(false, "Contact must be 10 digits"));
+	        }
+
+	        if (c.getPassword() == null || c.getPassword().length() < 4) {
+	            return ResponseEntity.badRequest().body(new ApiResponse(false, "Password must be at least 4 characters"));
+	        }
+
+	      
+	        citizenservice.CitizenRegister(c);
+
+	        return ResponseEntity.ok(new ApiResponse(true, "Account created successfully"));
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+
+	        return ResponseEntity
+	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new ApiResponse(false, "Registration failed: " + e.getMessage()));
+	    }
 	}
 	
 	@PostMapping("addissue")
@@ -96,7 +110,9 @@ public class CitizenController {
 		}
 	
 	}
-	
+	 CitizenController(DiscussionsRepository discussionsRepository) {
+	        this.discussionsRepository = discussionsRepository;
+	    }
 	
 	@GetMapping("/viewmyissues/{citizenid}") 
 	public ResponseEntity<?> viewMyIssues(@PathVariable Long citizenid){
